@@ -14,11 +14,11 @@ const authConfig = {
   tokens: {
     access: {
       type: tokenTypesEnum.ACCESS,
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRE,
+      expiresIn: '12h',
     },
     refresh: {
       type: tokenTypesEnum.REFRESH,
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRE,
+      expiresIn: '1d',
     },
   },
 };
@@ -66,28 +66,24 @@ const updateTokens = async (userId, payload) => {
 };
 
 const createNewPairOfTokens = async refreshToken => {
-  try {
-    const { id: tokenId, type } = jwt.verify(
-      refreshToken,
-      process.env.SECRET_KEY
-    );
+  const { id: tokenId, type } = jwt.verify(
+    refreshToken,
+    process.env.SECRET_KEY
+  );
 
-    if (type !== tokenTypesEnum.REFRESH) {
-      throw new CustomError(errorsEnum.UNAUTHORIZED);
-    }
-
-    const refreshOldTokens = await RefreshToken.findOne({ tokenId });
-
-    if (!refreshOldTokens) {
-      throw new CustomError(errorsEnum.UNAUTHORIZED);
-    }
-
-    const newTokens = await updateTokens(refreshOldTokens.userId);
-
-    return newTokens;
-  } catch (error) {
-    console.log(error);
+  if (type !== tokenTypesEnum.REFRESH) {
+    throw new CustomError(errorsEnum.UNAUTHORIZED);
   }
+
+  const refreshOldTokens = await RefreshToken.findOne({ tokenId });
+
+  if (!refreshOldTokens) {
+    throw new CustomError(errorsEnum.UNAUTHORIZED);
+  }
+
+  const newTokens = await updateTokens(refreshOldTokens.userId);
+
+  return newTokens;
 };
 
 module.exports = {
