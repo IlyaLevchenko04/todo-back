@@ -9,6 +9,7 @@ const {
   deleteTodo,
 } = require('../../../../services/todosServices');
 const { CustomError, errorsEnum } = require('../../../../errors/index');
+const { auth } = require('../../../../middlewares/auth');
 const router = express.Router();
 
 router.get(
@@ -41,6 +42,7 @@ router.get(
 
 router.post(
   '/',
+  auth,
   asyncHandler(async (req, res, next) => {
     try {
       const { error } = todoJoiSchema.validate(req.body);
@@ -60,6 +62,7 @@ router.post(
 
 router.put(
   '/:id',
+  auth,
   asyncHandler(async (req, res, next) => {
     try {
       const { error } = todoJoiSchema.validate(req.body);
@@ -79,6 +82,7 @@ router.put(
 
 router.delete(
   '/:id',
+  auth,
   asyncHandler(async (req, res, next) => {
     try {
       const data = await deleteTodo(req.params.id);

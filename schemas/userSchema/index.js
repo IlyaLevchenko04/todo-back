@@ -31,9 +31,15 @@ const userJoiSchema = Joi.object({
   password: Joi.string().min(8).required(),
 });
 
+const userSignInSchema = Joi.object({
+  email: Joi.string().required(),
+  password: Joi.string().required(),
+});
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = {
   User,
   userJoiSchema,
+  userSignInSchema,
 };
