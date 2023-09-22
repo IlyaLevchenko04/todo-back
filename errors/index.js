@@ -1,5 +1,5 @@
 module.exports = {
-  CustomError: require('./CustomError'),
+  CustomError: require('./customError'),
   errorsEnum: require('./errorsEnum'),
   errors: require('./errors'),
 };
